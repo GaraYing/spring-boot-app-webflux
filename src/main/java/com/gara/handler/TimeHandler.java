@@ -34,7 +34,6 @@ public class TimeHandler {
     /*
         1. MediaType.TEXT_EVENT_STREAM表示Content-Type为text/event-stream，即SSE；
         2. 利用interval生成每秒一个数据的流。
-
      */
     public Mono<ServerResponse> sendTimePerSec(ServerRequest serverRequest) {
         return ok().contentType(MediaType.TEXT_EVENT_STREAM).body(  // 1

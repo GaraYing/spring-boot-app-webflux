@@ -1,9 +1,13 @@
 package com.gara.config;
 
+import com.gara.event.MyEvent;
 import com.gara.handler.TimeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.CollectionOptions;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
@@ -26,6 +30,14 @@ public class RouterConfig {
         return route(GET("/time"), req -> timeHandler.getTime(req))
                 .andRoute(GET("/date"), timeHandler::getDate)  // 这种方式相对于上一行更加简洁
                 .andRoute(GET("/times"), timeHandler::sendTimePerSec); // 轮询,每秒推送一次数据
+    }
+
+    @Bean   // 1
+    public CommandLineRunner initData(MongoOperations mongo) {  // 2
+        return (String... args) -> {    // 3
+            mongo.dropCollection(MyEvent.class);    // 4
+            mongo.createCollection(MyEvent.class, CollectionOptions.empty().size(200).capped()); // 5
+        };
     }
 }
 
