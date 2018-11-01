@@ -20,8 +20,15 @@ public class EventController {
     /*
         注：方便起见，直接应用Dao层
      */
+//    @Autowired
+//    private MyEventRepository eventRepository;
+
+    private final MyEventRepository eventRepository;
+
     @Autowired
-    private MyEventRepository eventRepository;
+    public EventController(MyEventRepository eventRepository){
+        this.eventRepository = eventRepository;
+    }
 
     @PostMapping(path = "", consumes = MediaType.APPLICATION_STREAM_JSON_VALUE)
     public Mono<Void> loadEvents(@RequestBody Flux<MyEvent> events) {
